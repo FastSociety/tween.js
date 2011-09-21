@@ -96,11 +96,17 @@ TWEEN.Tween = function ( object, fps ) {
 	_easingFunction = TWEEN.Easing.Linear.EaseNone,
 	_chainedTween = null,
 	_onUpdateCallback = null,
-	_onCompleteCallback = null;
+	_onCompleteCallback = null,
+    _fps = fps || 0,
+    _tick = 0;
 
 	this.to = function ( properties, duration ) {
 
 		if( duration !== null ) {
+
+            if (_fps) {
+                duration *= _fps;
+            }
 
 			_duration = duration;
 
@@ -124,7 +130,7 @@ TWEEN.Tween = function ( object, fps ) {
 		return this;
 
 	};
-
+    
 	this.start = function () {
 
 		TWEEN.add( this );
@@ -157,6 +163,10 @@ TWEEN.Tween = function ( object, fps ) {
 
 	this.delay = function ( amount ) {
 
+        if (_fps) {
+            amount *= _fps;
+        }
+        
 		_delayTime = amount;
 		return this;
 
@@ -193,20 +203,34 @@ TWEEN.Tween = function ( object, fps ) {
 
 		var property, elapsed, value;
 
-		if ( time < _startTime ) {
+        if (_fps) {
+            _tick++;
 
-			return true;
+            if ( _tick < _delayTime ) {
+                return true;
+            }
 
-		}
+		    elapsed = ( _tick - _delayTime ) / _duration;
+        } else {
 
-		elapsed = ( time - _startTime ) / _duration;
+            if ( time < _startTime ) {
+
+                return true;
+
+            }
+
+		    elapsed = ( time - _startTime ) / _duration;
+        }
+
 		elapsed = elapsed > 1 ? 1 : elapsed;
 
 		value = _easingFunction( elapsed );
 
 		for ( property in _valuesDelta ) {
 
-			_object[ property ] = _valuesStart[ property ] + _valuesDelta[ property ] * value;
+            if (!isNaN (_valuesDelta[ property ]-0)) {
+			    _object[ property ] = _valuesStart[ property ] + _valuesDelta[ property ] * value;
+            }
 
 		}
 

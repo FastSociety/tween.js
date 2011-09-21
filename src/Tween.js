@@ -80,7 +80,11 @@ var TWEEN = TWEEN || ( function () {
 
 } )();
 
-TWEEN.Tween = function ( object ) {
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = TWEEN;
+}
+
+TWEEN.Tween = function ( object, fps ) {
 
 	var _object = object,
 	_valuesStart = {},

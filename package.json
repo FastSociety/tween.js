@@ -1,0 +1,11 @@
+{
+    "name": "tween.js",
+    "main": "./src/Tween",
+    "version": "0.2.0",
+    "description": "Super simple, fast and easy to use tweening engine which incorporates optimised Robert Penner's equations.",
+    "keywords": ["tween"],
+    "repository": "git://github.com/enobrev/tween.js",
+    "engines" : {
+        "node" : ">=0.5.2"
+    }
+}
